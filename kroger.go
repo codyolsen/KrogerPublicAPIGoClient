@@ -57,8 +57,8 @@ type LocationListParams struct {
 	FilterDepartment *string `form:"filter.department,omitempty" json:"filter.department,omitempty"`
 }
 
-// ProductListParams defines parameters for ProductList.
-type ProductListParams struct {
+// ProductSearchParams defines parameters for ProductSearch.
+type ProductSearchParams struct {
 	// FilterTerm A search term to filter product results. As an example, you could input milk, bread, or salt.
 	FilterTerm *string `form:"filter.term,omitempty" json:"filter.term,omitempty"`
 
@@ -189,8 +189,8 @@ type ClientInterface interface {
 	// LocationDetails request
 	LocationDetails(ctx context.Context, locationId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ProductList request
-	ProductList(ctx context.Context, params *ProductListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// ProductSearch request
+	ProductSearch(ctx context.Context, params *ProductSearchParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ProductDetails request
 	ProductDetails(ctx context.Context, id string, params *ProductDetailsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -304,8 +304,8 @@ func (c *Client) LocationDetails(ctx context.Context, locationId string, reqEdit
 	return c.Client.Do(req)
 }
 
-func (c *Client) ProductList(ctx context.Context, params *ProductListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewProductListRequest(c.Server, params)
+func (c *Client) ProductSearch(ctx context.Context, params *ProductSearchParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewProductSearchRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -712,8 +712,8 @@ func NewLocationDetailsRequest(server string, locationId string) (*http.Request,
 	return req, nil
 }
 
-// NewProductListRequest generates requests for ProductList
-func NewProductListRequest(server string, params *ProductListParams) (*http.Request, error) {
+// NewProductSearchRequest generates requests for ProductSearch
+func NewProductSearchRequest(server string, params *ProductSearchParams) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -982,8 +982,8 @@ type ClientWithResponsesInterface interface {
 	// LocationDetailsWithResponse request
 	LocationDetailsWithResponse(ctx context.Context, locationId string, reqEditors ...RequestEditorFn) (*LocationDetailsResponse, error)
 
-	// ProductListWithResponse request
-	ProductListWithResponse(ctx context.Context, params *ProductListParams, reqEditors ...RequestEditorFn) (*ProductListResponse, error)
+	// ProductSearchWithResponse request
+	ProductSearchWithResponse(ctx context.Context, params *ProductSearchParams, reqEditors ...RequestEditorFn) (*ProductSearchResponse, error)
 
 	// ProductDetailsWithResponse request
 	ProductDetailsWithResponse(ctx context.Context, id string, params *ProductDetailsParams, reqEditors ...RequestEditorFn) (*ProductDetailsResponse, error)
@@ -1285,41 +1285,41 @@ type LocationListResponse struct {
 			Departments *[]struct {
 				DepartmentId *string `json:"departmentId,omitempty"`
 				Hours        *struct {
-					Open24 *string `json:"Open24,omitempty"`
+					Open24 *bool `json:"Open24,omitempty"`
 					Friday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"friday,omitempty"`
 					Monday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"monday,omitempty"`
 					Saturday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"saturday,omitempty"`
 					Sunday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"sunday,omitempty"`
 					Thursday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"thursday,omitempty"`
 					Tuesday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"tuesday,omitempty"`
 					Wednesday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"wednesday,omitempty"`
 				} `json:"hours,omitempty"`
 				Name  *string `json:"name,omitempty"`
@@ -1332,43 +1332,43 @@ type LocationListResponse struct {
 				Longitude *string `json:"longitude,omitempty"`
 			} `json:"geolocation,omitempty"`
 			Hours *struct {
-				Open24 *string `json:"Open24,omitempty"`
+				Open24 *bool `json:"Open24,omitempty"`
 				Friday *struct {
 					Close  *string `json:"close,omitempty"`
 					Open   *string `json:"open,omitempty"`
-					Open24 *string `json:"open24,omitempty"`
+					Open24 *bool   `json:"open24,omitempty"`
 				} `json:"friday,omitempty"`
 				GmtOffset *string `json:"gmtOffset,omitempty"`
 				Monday    *struct {
 					Close  *string `json:"close,omitempty"`
 					Open   *string `json:"open,omitempty"`
-					Open24 *string `json:"open24,omitempty"`
+					Open24 *bool   `json:"open24,omitempty"`
 				} `json:"monday,omitempty"`
 				Saturday *struct {
 					Close  *string `json:"close,omitempty"`
 					Open   *string `json:"open,omitempty"`
-					Open24 *string `json:"open24,omitempty"`
+					Open24 *bool   `json:"open24,omitempty"`
 				} `json:"saturday,omitempty"`
 				Sunday *struct {
 					Close  *string `json:"close,omitempty"`
 					Open   *string `json:"open,omitempty"`
-					Open24 *string `json:"open24,omitempty"`
+					Open24 *bool   `json:"open24,omitempty"`
 				} `json:"sunday,omitempty"`
 				Thursday *struct {
 					Close  *string `json:"close,omitempty"`
 					Open   *string `json:"open,omitempty"`
-					Open24 *string `json:"open24,omitempty"`
+					Open24 *bool   `json:"open24,omitempty"`
 				} `json:"thursday,omitempty"`
 				Timezone *string `json:"timezone,omitempty"`
 				Tuesday  *struct {
 					Close  *string `json:"close,omitempty"`
 					Open   *string `json:"open,omitempty"`
-					Open24 *string `json:"open24,omitempty"`
+					Open24 *bool   `json:"open24,omitempty"`
 				} `json:"tuesday,omitempty"`
 				Wednesday *struct {
 					Close  *string `json:"close,omitempty"`
 					Open   *string `json:"open,omitempty"`
-					Open24 *string `json:"open24,omitempty"`
+					Open24 *bool   `json:"open24,omitempty"`
 				} `json:"wednesday,omitempty"`
 			} `json:"hours,omitempty"`
 			LocationId  *string `json:"locationId,omitempty"`
@@ -1436,41 +1436,41 @@ type LocationDetailsResponse struct {
 			Departments *[]struct {
 				DepartmentId *string `json:"departmentId,omitempty"`
 				Hours        *struct {
-					Open24 *string `json:"Open24,omitempty"`
+					Open24 *bool `json:"Open24,omitempty"`
 					Friday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"friday,omitempty"`
 					Monday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"monday,omitempty"`
 					Saturday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"saturday,omitempty"`
 					Sunday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"sunday,omitempty"`
 					Thursday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"thursday,omitempty"`
 					Tuesday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"tuesday,omitempty"`
 					Wednesday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"wednesday,omitempty"`
 				} `json:"hours,omitempty"`
 				Name  *string `json:"name,omitempty"`
@@ -1483,43 +1483,43 @@ type LocationDetailsResponse struct {
 				Longitude *string `json:"longitude,omitempty"`
 			} `json:"geolocation,omitempty"`
 			Hours *struct {
-				Open24 *string `json:"Open24,omitempty"`
+				Open24 *bool `json:"Open24,omitempty"`
 				Friday *struct {
 					Close  *string `json:"close,omitempty"`
 					Open   *string `json:"open,omitempty"`
-					Open24 *string `json:"open24,omitempty"`
+					Open24 *bool   `json:"open24,omitempty"`
 				} `json:"friday,omitempty"`
 				GmtOffset *string `json:"gmtOffset,omitempty"`
 				Monday    *struct {
 					Close  *string `json:"close,omitempty"`
 					Open   *string `json:"open,omitempty"`
-					Open24 *string `json:"open24,omitempty"`
+					Open24 *bool   `json:"open24,omitempty"`
 				} `json:"monday,omitempty"`
 				Saturday *struct {
 					Close  *string `json:"close,omitempty"`
 					Open   *string `json:"open,omitempty"`
-					Open24 *string `json:"open24,omitempty"`
+					Open24 *bool   `json:"open24,omitempty"`
 				} `json:"saturday,omitempty"`
 				Sunday *struct {
 					Close  *string `json:"close,omitempty"`
 					Open   *string `json:"open,omitempty"`
-					Open24 *string `json:"open24,omitempty"`
+					Open24 *bool   `json:"open24,omitempty"`
 				} `json:"sunday,omitempty"`
 				Thursday *struct {
 					Close  *string `json:"close,omitempty"`
 					Open   *string `json:"open,omitempty"`
-					Open24 *string `json:"open24,omitempty"`
+					Open24 *bool   `json:"open24,omitempty"`
 				} `json:"thursday,omitempty"`
 				Timezone *string `json:"timezone,omitempty"`
 				Tuesday  *struct {
 					Close  *string `json:"close,omitempty"`
 					Open   *string `json:"open,omitempty"`
-					Open24 *string `json:"open24,omitempty"`
+					Open24 *bool   `json:"open24,omitempty"`
 				} `json:"tuesday,omitempty"`
 				Wednesday *struct {
 					Close  *string `json:"close,omitempty"`
 					Open   *string `json:"open,omitempty"`
-					Open24 *string `json:"open24,omitempty"`
+					Open24 *bool   `json:"open24,omitempty"`
 				} `json:"wednesday,omitempty"`
 			} `json:"hours,omitempty"`
 			LocationId  *string `json:"locationId,omitempty"`
@@ -1574,7 +1574,7 @@ func (r LocationDetailsResponse) StatusCode() int {
 	return 0
 }
 
-type ProductListResponse struct {
+type ProductSearchResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
@@ -1594,7 +1594,7 @@ type ProductListResponse struct {
 			CountryOrigin *string   `json:"countryOrigin,omitempty"`
 			Description   *string   `json:"description,omitempty"`
 			Images        *[]struct {
-				Default *string `json:"default,omitempty"`
+				Default *bool   `json:"default,omitempty"`
 				Type    *string `json:"type,omitempty"`
 			} `json:"images,omitempty"`
 			ItemInformation *struct {
@@ -1603,10 +1603,10 @@ type ProductListResponse struct {
 				Width  *string `json:"width,omitempty"`
 			} `json:"itemInformation,omitempty"`
 			Items *[]struct {
-				Favorite    *string `json:"favorite,omitempty"`
+				Favorite    *bool `json:"favorite,omitempty"`
 				Fulfillment *struct {
-					Curbside *string `json:"curbside,omitempty"`
-					Delivery *string `json:"delivery,omitempty"`
+					Curbside *bool `json:"curbside,omitempty"`
+					Delivery *bool `json:"delivery,omitempty"`
 				} `json:"fulfillment,omitempty"`
 				Inventory *struct {
 					StockLevel *string `json:"stockLevel,omitempty"`
@@ -1620,7 +1620,7 @@ type ProductListResponse struct {
 			} `json:"items,omitempty"`
 			ProductId   *string `json:"productId,omitempty"`
 			Temperature *struct {
-				HeatSensitive *string `json:"heatSensitive,omitempty"`
+				HeatSensitive *bool   `json:"heatSensitive,omitempty"`
 				Indicator     *string `json:"indicator,omitempty"`
 			} `json:"temperature,omitempty"`
 			Upc *string `json:"upc,omitempty"`
@@ -1653,7 +1653,7 @@ type ProductListResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r ProductListResponse) Status() string {
+func (r ProductSearchResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -1661,7 +1661,7 @@ func (r ProductListResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r ProductListResponse) StatusCode() int {
+func (r ProductSearchResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -1688,7 +1688,7 @@ type ProductDetailsResponse struct {
 			CountryOrigin *string   `json:"countryOrigin,omitempty"`
 			Description   *string   `json:"description,omitempty"`
 			Images        *[]struct {
-				Default *string `json:"default,omitempty"`
+				Default *bool   `json:"default,omitempty"`
 				Type    *string `json:"type,omitempty"`
 			} `json:"images,omitempty"`
 			ItemInformation *struct {
@@ -1697,10 +1697,10 @@ type ProductDetailsResponse struct {
 				Width  *string `json:"width,omitempty"`
 			} `json:"itemInformation,omitempty"`
 			Items *[]struct {
-				Favorite    *string `json:"favorite,omitempty"`
+				Favorite    *bool `json:"favorite,omitempty"`
 				Fulfillment *struct {
-					Curbside *string `json:"curbside,omitempty"`
-					Delivery *string `json:"delivery,omitempty"`
+					Curbside *bool `json:"curbside,omitempty"`
+					Delivery *bool `json:"delivery,omitempty"`
 				} `json:"fulfillment,omitempty"`
 				Inventory *struct {
 					StockLevel *string `json:"stockLevel,omitempty"`
@@ -1714,7 +1714,7 @@ type ProductDetailsResponse struct {
 			} `json:"items,omitempty"`
 			ProductId   *string `json:"productId,omitempty"`
 			Temperature *struct {
-				HeatSensitive *string `json:"heatSensitive,omitempty"`
+				HeatSensitive *bool   `json:"heatSensitive,omitempty"`
 				Indicator     *string `json:"indicator,omitempty"`
 			} `json:"temperature,omitempty"`
 			Upc *string `json:"upc,omitempty"`
@@ -1846,13 +1846,13 @@ func (c *ClientWithResponses) LocationDetailsWithResponse(ctx context.Context, l
 	return ParseLocationDetailsResponse(rsp)
 }
 
-// ProductListWithResponse request returning *ProductListResponse
-func (c *ClientWithResponses) ProductListWithResponse(ctx context.Context, params *ProductListParams, reqEditors ...RequestEditorFn) (*ProductListResponse, error) {
-	rsp, err := c.ProductList(ctx, params, reqEditors...)
+// ProductSearchWithResponse request returning *ProductSearchResponse
+func (c *ClientWithResponses) ProductSearchWithResponse(ctx context.Context, params *ProductSearchParams, reqEditors ...RequestEditorFn) (*ProductSearchResponse, error) {
+	rsp, err := c.ProductSearch(ctx, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseProductListResponse(rsp)
+	return ParseProductSearchResponse(rsp)
 }
 
 // ProductDetailsWithResponse request returning *ProductDetailsResponse
@@ -2286,41 +2286,41 @@ func ParseLocationListResponse(rsp *http.Response) (*LocationListResponse, error
 				Departments *[]struct {
 					DepartmentId *string `json:"departmentId,omitempty"`
 					Hours        *struct {
-						Open24 *string `json:"Open24,omitempty"`
+						Open24 *bool `json:"Open24,omitempty"`
 						Friday *struct {
 							Close  *string `json:"close,omitempty"`
 							Open   *string `json:"open,omitempty"`
-							Open24 *string `json:"open24,omitempty"`
+							Open24 *bool   `json:"open24,omitempty"`
 						} `json:"friday,omitempty"`
 						Monday *struct {
 							Close  *string `json:"close,omitempty"`
 							Open   *string `json:"open,omitempty"`
-							Open24 *string `json:"open24,omitempty"`
+							Open24 *bool   `json:"open24,omitempty"`
 						} `json:"monday,omitempty"`
 						Saturday *struct {
 							Close  *string `json:"close,omitempty"`
 							Open   *string `json:"open,omitempty"`
-							Open24 *string `json:"open24,omitempty"`
+							Open24 *bool   `json:"open24,omitempty"`
 						} `json:"saturday,omitempty"`
 						Sunday *struct {
 							Close  *string `json:"close,omitempty"`
 							Open   *string `json:"open,omitempty"`
-							Open24 *string `json:"open24,omitempty"`
+							Open24 *bool   `json:"open24,omitempty"`
 						} `json:"sunday,omitempty"`
 						Thursday *struct {
 							Close  *string `json:"close,omitempty"`
 							Open   *string `json:"open,omitempty"`
-							Open24 *string `json:"open24,omitempty"`
+							Open24 *bool   `json:"open24,omitempty"`
 						} `json:"thursday,omitempty"`
 						Tuesday *struct {
 							Close  *string `json:"close,omitempty"`
 							Open   *string `json:"open,omitempty"`
-							Open24 *string `json:"open24,omitempty"`
+							Open24 *bool   `json:"open24,omitempty"`
 						} `json:"tuesday,omitempty"`
 						Wednesday *struct {
 							Close  *string `json:"close,omitempty"`
 							Open   *string `json:"open,omitempty"`
-							Open24 *string `json:"open24,omitempty"`
+							Open24 *bool   `json:"open24,omitempty"`
 						} `json:"wednesday,omitempty"`
 					} `json:"hours,omitempty"`
 					Name  *string `json:"name,omitempty"`
@@ -2333,43 +2333,43 @@ func ParseLocationListResponse(rsp *http.Response) (*LocationListResponse, error
 					Longitude *string `json:"longitude,omitempty"`
 				} `json:"geolocation,omitempty"`
 				Hours *struct {
-					Open24 *string `json:"Open24,omitempty"`
+					Open24 *bool `json:"Open24,omitempty"`
 					Friday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"friday,omitempty"`
 					GmtOffset *string `json:"gmtOffset,omitempty"`
 					Monday    *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"monday,omitempty"`
 					Saturday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"saturday,omitempty"`
 					Sunday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"sunday,omitempty"`
 					Thursday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"thursday,omitempty"`
 					Timezone *string `json:"timezone,omitempty"`
 					Tuesday  *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"tuesday,omitempty"`
 					Wednesday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"wednesday,omitempty"`
 				} `json:"hours,omitempty"`
 				LocationId  *string `json:"locationId,omitempty"`
@@ -2459,41 +2459,41 @@ func ParseLocationDetailsResponse(rsp *http.Response) (*LocationDetailsResponse,
 				Departments *[]struct {
 					DepartmentId *string `json:"departmentId,omitempty"`
 					Hours        *struct {
-						Open24 *string `json:"Open24,omitempty"`
+						Open24 *bool `json:"Open24,omitempty"`
 						Friday *struct {
 							Close  *string `json:"close,omitempty"`
 							Open   *string `json:"open,omitempty"`
-							Open24 *string `json:"open24,omitempty"`
+							Open24 *bool   `json:"open24,omitempty"`
 						} `json:"friday,omitempty"`
 						Monday *struct {
 							Close  *string `json:"close,omitempty"`
 							Open   *string `json:"open,omitempty"`
-							Open24 *string `json:"open24,omitempty"`
+							Open24 *bool   `json:"open24,omitempty"`
 						} `json:"monday,omitempty"`
 						Saturday *struct {
 							Close  *string `json:"close,omitempty"`
 							Open   *string `json:"open,omitempty"`
-							Open24 *string `json:"open24,omitempty"`
+							Open24 *bool   `json:"open24,omitempty"`
 						} `json:"saturday,omitempty"`
 						Sunday *struct {
 							Close  *string `json:"close,omitempty"`
 							Open   *string `json:"open,omitempty"`
-							Open24 *string `json:"open24,omitempty"`
+							Open24 *bool   `json:"open24,omitempty"`
 						} `json:"sunday,omitempty"`
 						Thursday *struct {
 							Close  *string `json:"close,omitempty"`
 							Open   *string `json:"open,omitempty"`
-							Open24 *string `json:"open24,omitempty"`
+							Open24 *bool   `json:"open24,omitempty"`
 						} `json:"thursday,omitempty"`
 						Tuesday *struct {
 							Close  *string `json:"close,omitempty"`
 							Open   *string `json:"open,omitempty"`
-							Open24 *string `json:"open24,omitempty"`
+							Open24 *bool   `json:"open24,omitempty"`
 						} `json:"tuesday,omitempty"`
 						Wednesday *struct {
 							Close  *string `json:"close,omitempty"`
 							Open   *string `json:"open,omitempty"`
-							Open24 *string `json:"open24,omitempty"`
+							Open24 *bool   `json:"open24,omitempty"`
 						} `json:"wednesday,omitempty"`
 					} `json:"hours,omitempty"`
 					Name  *string `json:"name,omitempty"`
@@ -2506,43 +2506,43 @@ func ParseLocationDetailsResponse(rsp *http.Response) (*LocationDetailsResponse,
 					Longitude *string `json:"longitude,omitempty"`
 				} `json:"geolocation,omitempty"`
 				Hours *struct {
-					Open24 *string `json:"Open24,omitempty"`
+					Open24 *bool `json:"Open24,omitempty"`
 					Friday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"friday,omitempty"`
 					GmtOffset *string `json:"gmtOffset,omitempty"`
 					Monday    *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"monday,omitempty"`
 					Saturday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"saturday,omitempty"`
 					Sunday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"sunday,omitempty"`
 					Thursday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"thursday,omitempty"`
 					Timezone *string `json:"timezone,omitempty"`
 					Tuesday  *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"tuesday,omitempty"`
 					Wednesday *struct {
 						Close  *string `json:"close,omitempty"`
 						Open   *string `json:"open,omitempty"`
-						Open24 *string `json:"open24,omitempty"`
+						Open24 *bool   `json:"open24,omitempty"`
 					} `json:"wednesday,omitempty"`
 				} `json:"hours,omitempty"`
 				LocationId  *string `json:"locationId,omitempty"`
@@ -2607,15 +2607,15 @@ func ParseLocationDetailsResponse(rsp *http.Response) (*LocationDetailsResponse,
 	return response, nil
 }
 
-// ParseProductListResponse parses an HTTP response from a ProductListWithResponse call
-func ParseProductListResponse(rsp *http.Response) (*ProductListResponse, error) {
+// ParseProductSearchResponse parses an HTTP response from a ProductSearchWithResponse call
+func ParseProductSearchResponse(rsp *http.Response) (*ProductSearchResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &ProductListResponse{
+	response := &ProductSearchResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -2639,7 +2639,7 @@ func ParseProductListResponse(rsp *http.Response) (*ProductListResponse, error) 
 				CountryOrigin *string   `json:"countryOrigin,omitempty"`
 				Description   *string   `json:"description,omitempty"`
 				Images        *[]struct {
-					Default *string `json:"default,omitempty"`
+					Default *bool   `json:"default,omitempty"`
 					Type    *string `json:"type,omitempty"`
 				} `json:"images,omitempty"`
 				ItemInformation *struct {
@@ -2648,10 +2648,10 @@ func ParseProductListResponse(rsp *http.Response) (*ProductListResponse, error) 
 					Width  *string `json:"width,omitempty"`
 				} `json:"itemInformation,omitempty"`
 				Items *[]struct {
-					Favorite    *string `json:"favorite,omitempty"`
+					Favorite    *bool `json:"favorite,omitempty"`
 					Fulfillment *struct {
-						Curbside *string `json:"curbside,omitempty"`
-						Delivery *string `json:"delivery,omitempty"`
+						Curbside *bool `json:"curbside,omitempty"`
+						Delivery *bool `json:"delivery,omitempty"`
 					} `json:"fulfillment,omitempty"`
 					Inventory *struct {
 						StockLevel *string `json:"stockLevel,omitempty"`
@@ -2665,7 +2665,7 @@ func ParseProductListResponse(rsp *http.Response) (*ProductListResponse, error) 
 				} `json:"items,omitempty"`
 				ProductId   *string `json:"productId,omitempty"`
 				Temperature *struct {
-					HeatSensitive *string `json:"heatSensitive,omitempty"`
+					HeatSensitive *bool   `json:"heatSensitive,omitempty"`
 					Indicator     *string `json:"indicator,omitempty"`
 				} `json:"temperature,omitempty"`
 				Upc *string `json:"upc,omitempty"`
@@ -2755,7 +2755,7 @@ func ParseProductDetailsResponse(rsp *http.Response) (*ProductDetailsResponse, e
 				CountryOrigin *string   `json:"countryOrigin,omitempty"`
 				Description   *string   `json:"description,omitempty"`
 				Images        *[]struct {
-					Default *string `json:"default,omitempty"`
+					Default *bool   `json:"default,omitempty"`
 					Type    *string `json:"type,omitempty"`
 				} `json:"images,omitempty"`
 				ItemInformation *struct {
@@ -2764,10 +2764,10 @@ func ParseProductDetailsResponse(rsp *http.Response) (*ProductDetailsResponse, e
 					Width  *string `json:"width,omitempty"`
 				} `json:"itemInformation,omitempty"`
 				Items *[]struct {
-					Favorite    *string `json:"favorite,omitempty"`
+					Favorite    *bool `json:"favorite,omitempty"`
 					Fulfillment *struct {
-						Curbside *string `json:"curbside,omitempty"`
-						Delivery *string `json:"delivery,omitempty"`
+						Curbside *bool `json:"curbside,omitempty"`
+						Delivery *bool `json:"delivery,omitempty"`
 					} `json:"fulfillment,omitempty"`
 					Inventory *struct {
 						StockLevel *string `json:"stockLevel,omitempty"`
@@ -2781,7 +2781,7 @@ func ParseProductDetailsResponse(rsp *http.Response) (*ProductDetailsResponse, e
 				} `json:"items,omitempty"`
 				ProductId   *string `json:"productId,omitempty"`
 				Temperature *struct {
-					HeatSensitive *string `json:"heatSensitive,omitempty"`
+					HeatSensitive *bool   `json:"heatSensitive,omitempty"`
 					Indicator     *string `json:"indicator,omitempty"`
 				} `json:"temperature,omitempty"`
 				Upc *string `json:"upc,omitempty"`
