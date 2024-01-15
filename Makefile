@@ -10,16 +10,15 @@ download-repo:
 	else \
 		echo "OpenAPI Schema found"; \
 	fi
-	
-# Generates the client via openapi-generator
-generate-client:
-	@which openapi-generator > /dev/null || \
-	(echo "openapi-generator command not found. You'll need to install it or add it to your path before continuing" && exit 1)
 
-	openapi-generator generate -i build/kroger-public-openapi/kroger_public_openAPIv3.yml -g go -o . \
-	--additional-properties=disallowAdditionalPropertiesIfNotPresent=false,packageName=kroger,packageVersion=1.0.0,generateInterfaces=true,modelFileFolder=model,apiFileFolder=apis \
-	--git-repo-id go-kroger-public \
-	--git-user-id codyolsen
+# Generates the client via oapi-generator
+generate-client:
+	@which oapi-codegen > /dev/null || \
+	(echo "\n oapi-codegen command not found. You'll need to install it with:\n \`go install github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@latest\`\n" && exit 1)
+
+	oapi-codegen -package kroger \
+	-generate client,types \
+	build/kroger-public-openapi/kroger_public_openAPIv3.yml > kroger.gen.go
 
 # Build the client.
 build-client: download-repo generate-client
