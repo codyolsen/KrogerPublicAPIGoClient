@@ -18,7 +18,7 @@ generate-client:
 
 	oapi-codegen -package kroger \
 	-generate client,types \
-	build/kroger-public-openapi/kroger_public_openAPIv3.yml > kroger.gen.go
+	build/kroger-public-openapi/kroger_public_openAPIv3.yml > kroger.go
 
 # Build the client.
 build-client: download-repo generate-client
